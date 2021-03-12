@@ -1,25 +1,29 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react'
+import './App.css'
+import List from './components/List/List'
+import { getLists } from './fetch'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      lists: []
+    }
+  }
+
+  render () {
+    return (
+      <div className='App'>
+        {this.state.lists}
+      </div>
+    )
+  }
+
+  async componentDidMount () {
+    const lists = await getLists()
+    this.setState({ lists: lists.map(list => <List key={list.id} list={list} />) })
+    console.log(this.state.lists)
+  }
 }
 
-export default App;
+export default App
