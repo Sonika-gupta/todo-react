@@ -1,0 +1,47 @@
+main {
+    width: auto;
+    min-width: 600px;
+}
+.empty-list {
+  position: relative;
+  top: 45%;
+  left: 30%;
+}
+.list-icon {
+  width: 150px;
+  height: 150px;
+  padding: 10px 5px;
+  box-sizing: border-box;
+  word-wrap: normal;
+  box-shadow: 0 0 0 1px rgb(242, 242, 242);
+  font-size: 0.01em;
+}
+.list-icon-container {
+  margin: 25px;
+}
+.tick {
+  height: 20px;
+  position: relative;
+  width: 30px;
+  float: right;
+  right: 10px;
+  bottom: 40px;
+}
+.caption {
+  text-transform: capitalize;
+  text-align: center;
+  text-emphasis: weight;
+  width: 100%;
+}
+.hidden {
+  display: none !important;
+}
+.light {
+  color: gray;
+  font-size: 0.9em;
+}
+.list {
+    display: flex;
+    flex-direction: row;
+    flex-flow: wrap;
+}

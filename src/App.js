@@ -1,7 +1,7 @@
 import React from 'react'
 import './App.css'
 import List from './components/List/List'
-import { getLists } from './fetch'
+import { getLists } from './fetchData'
 
 class App extends React.Component {
   constructor (props) {
@@ -13,16 +13,18 @@ class App extends React.Component {
 
   render () {
     return (
-      <div className='App'>
-        {this.state.lists}
+      <div className='app'>
+        {this.state.lists.map(list => (
+          <List key={list.id} list={list} />
+        ))}
       </div>
     )
   }
 
   async componentDidMount () {
-    const lists = await getLists()
-    this.setState({ lists: lists.map(list => <List key={list.id} list={list} />) })
-    console.log(this.state.lists)
+    this.setState({
+      lists: await getLists()
+    })
   }
 }
 
