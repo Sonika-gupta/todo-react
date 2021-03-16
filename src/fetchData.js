@@ -25,7 +25,12 @@ async function getTasks (listId) {
   return await fetchData(`tasks/${listId}`)
 }
 
+async function getTasksTitles (listId) {
+  return await fetchData(`tasks/${listId}/title`)
+}
+
 export {
   getLists,
-  getTasks
+  getTasks,
+  getTasksTitles
 }
