@@ -4,8 +4,8 @@ import Item from '../Item/Item'
 import { getTasks } from '../../fetchData'
 
 class List extends React.Component {
-  constructor () {
-    super()
+  constructor (props) {
+    super(props)
     this.state = {
       tasks: []
     }
@@ -15,8 +15,8 @@ class List extends React.Component {
     return (
       <ul>
         {this.state.tasks.map(task => (
-          <li key={`${task.id}`}>
-            <Item />
+          <li key={task.id}>
+            <Item task={task} />
           </li>
         ))}
       </ul>
@@ -24,7 +24,7 @@ class List extends React.Component {
   }
 
   async componentDidMount () {
-    this.setState({ tasks: await getTasks(this.props.list.id) })
+    this.setState({ tasks: await getTasks(this.props.match.params.id) })
   }
 
   minimap () {

@@ -1,4 +1,10 @@
-main {
+ul {    
     width: auto;
     min-width: 600px;
+    padding: 0;
+    margin: 10px auto;    
+}
+
+li {
+    all: unset;
 }

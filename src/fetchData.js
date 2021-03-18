@@ -10,15 +10,24 @@ async function fetchData (route, data, method = 'GET') {
       }
     })
     const value = await res.json()
-    if (value.error) throw Error(value.error)
+    if (value.error) console.log(value.error)
     return value
   } catch (err) {
-    throw Error({ message: 'Fetch Failed', error: err })
+    console.log(err)
+    throw Error({ message: 'Fetch Failed', err })
   }
 }
 
 async function getLists () {
   return await fetchData('lists')
+}
+
+async function newList (name) {
+  return await fetchData('lists', { name }, 'POST')
+}
+
+async function deleteLists (ids) {
+  return await fetchData('lists', { ids: [...ids] }, 'DELETE')
 }
 
 async function getTasks (listId) {
@@ -31,6 +40,8 @@ async function getTasksTitles (listId) {
 
 export {
   getLists,
+  newList,
+  deleteLists,
   getTasks,
   getTasksTitles
 }
