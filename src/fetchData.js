@@ -22,12 +22,20 @@ async function getLists () {
   return await fetchData('lists')
 }
 
+async function getListById (id) {
+  return await fetchData(`lists/${id}`)
+}
+
 async function newList (name) {
   return await fetchData('lists', { name }, 'POST')
 }
 
 async function deleteLists (ids) {
   return await fetchData('lists', { ids: [...ids] }, 'DELETE')
+}
+
+async function updateList (id, key, value) {
+  return await fetchData('lists', { id, key, value }, 'PUT')
 }
 
 async function getTasks (listId) {
@@ -39,8 +47,10 @@ async function getTasksTitles (listId) {
 }
 
 export {
-  getLists,
   newList,
+  getLists,
+  getListById,
+  updateList,
   deleteLists,
   getTasks,
   getTasksTitles

@@ -1,12 +1,13 @@
 import React from 'react'
 import './list.css'
 import Item from '../Item/Item'
-import { getTasks } from '../../fetchData'
+import { getTasks, getListById } from '../../fetchData'
 
 class List extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
+      list: {},
       tasks: []
     }
   }
@@ -14,6 +15,7 @@ class List extends React.Component {
   render () {
     return (
       <ul>
+        <style>{`body { background-color: ${this.state.list.color} }`}</style>
         {this.state.tasks.map(task => (
           <li key={task.id}>
             <Item task={task} />
@@ -24,7 +26,10 @@ class List extends React.Component {
   }
 
   async componentDidMount () {
-    this.setState({ tasks: await getTasks(this.props.match.params.id) })
+    const id = this.props.match.params.id
+    this.setState({ list: await getListById(id) })
+    this.setState({ tasks: await getTasks(id) })
+    // document.body.style.backgroundColor = this.state.list.color
   }
 
   minimap () {

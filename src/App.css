@@ -1,3 +1,8 @@
+* {
+  font: inherit;
+  align-self: center;
+  box-sizing: border-box;
+}
 header {
   position: fixed;
   width: 100%;
@@ -9,6 +14,13 @@ main {
   flex-direction: row;
   flex-flow: wrap;
 }
+footer button {
+  border-radius: 4px;
+  min-width: 60px;
+  height: 30px;
+  padding: 5px 20px;
+  margin: 2px;
+}
 button:focus {
   outline: none;
 }
@@ -16,6 +28,11 @@ button:focus {
   border: solid 1px rgb(224, 224, 224);
   border-radius: 4px;
   margin: 3px auto;
+}
+.deleteButton {
+  background-color: rgb(199,22,43);
+  color: white;
+  float: right;
 }
 #contextMenu {
   padding: 5px;

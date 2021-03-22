@@ -4,19 +4,19 @@ import './App.css'
 import ListIcon from './components/ListIcon/ListIcon'
 import List from './components/List/List'
 import Nav from './components/Nav/Nav'
-import { getLists, deleteLists } from './fetchData'
+import { getLists, deleteLists, updateList } from './fetchData'
 
 class App extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
       lists: [],
-      selectedLists: new Set()
+      selectedLists: []
     }
     this.appendNewListIcon = this.appendNewListIcon.bind(this)
     this.handleDeleteList = this.handleDeleteList.bind(this)
+    this.handleRenameList = this.handleRenameList.bind(this)
     this.handleRightCLick = this.handleRightCLick.bind(this)
-    // this.handleIconClick = this.handleIconClick.bind(this)
   }
 
   render () {
@@ -38,25 +38,26 @@ class App extends React.Component {
                     }}
                     key={list.id}
                     to={`/lists/${list.id}`}
-                    style={{ textDecoration: 'none', color: 'inherit' }}
+                    style={{ all: 'unset', color: 'inherit' }}
                   >
                     <ListIcon
                       list={list}
-                      selected={this.state.selectedLists.has(list.id)}
-                      onClick={this.handleRightCLick}
+                      selected={this.state.selectedLists.indexOf(list.id) === -1}
                     />
                   </Link>
                 ))}
               </main>
               <footer>
                 <div id='contextMenu'>
-                  <button style={{ backgroundColor: 'white' }} disabled>Rename</button>
                   <button
-                    style={{
-                      backgroundColor: 'rgb(199,22,43)',
-                      color: 'white',
-                      float: 'right'
-                    }}
+                    style={{ backgroundColor: 'white' }}
+                    disabled={this.state.selectedLists.length !== 1}
+                    onClick={this.handleRenameList}
+                  >Rename
+                  </button>
+                  <button
+                    className='deleteButton'
+                    disabled={!this.state.selectedLists.length || this.state.selectedLists.indexOf(0) === -1}
                     onClick={this.handleDeleteList}
                   >Delete
                   </button>
@@ -81,16 +82,27 @@ class App extends React.Component {
   }
 
   async handleRightCLick (id) {
-    this.state.selectedLists.has(id)
-      ? this.state.selectedLists.delete(id)
-      : this.state.selectedLists.add(id)
+    const selectedLists = this.state.selectedLists
+    const index = selectedLists.indexOf(id)
+    index === -1
+      ? selectedLists.push(id)
+      : selectedLists.splice(index)
 
-    console.log(this.state.selectedLists)
+    this.setState({ selectedLists })
   }
 
   async handleDeleteList () {
     const deletedLists = await deleteLists(this.state.selectedLists)
     this.removeListIcon(deletedLists.map(list => list.id))
+  }
+
+  async handleRenameList () {
+    const newName = window.prompt('New List Name: ')
+    if (newName) {
+      const lists = this.state.lists
+      const renamedList = await updateList(this.state.selectedLists[0], 'name', newName)
+      this.setState({ lists: lists.map(list => list.id === renamedList.id ? renamedList : list) })
+    }
   }
 
   async componentDidMount () {
