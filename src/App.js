@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom'
 import './App.css'
 import ListIcon from './components/ListIcon/ListIcon'
 import List from './components/List/List'
-import Nav from './components/Nav/Nav'
+import Header from './components/Header/Header'
 import { getLists, deleteLists, updateList } from './fetchData'
 
 class App extends React.Component {
@@ -24,11 +24,9 @@ class App extends React.Component {
       <div className='app'>
         <Router>
           <Switch>
-            <Route path='/lists/:id' component={List} />
+            <Route path='/lists/:id' component={List} exact />
             <Route path='/' exact>
-              <header>
-                <Nav newListHandler={this.appendNewListIcon} />
-              </header>
+              <Header newListHandler={this.appendNewListIcon} />
               <main>
                 {this.state.lists.map(list => (
                   <Link
@@ -53,7 +51,7 @@ class App extends React.Component {
                     style={{ backgroundColor: 'white' }}
                     disabled={this.state.selectedLists.length !== 1}
                     onClick={this.handleRenameList}
-                  >Rename
+                  >Rename {this.state.selectedLists.length}
                   </button>
                   <button
                     className='deleteButton'
@@ -86,7 +84,7 @@ class App extends React.Component {
     const index = selectedLists.indexOf(id)
     index === -1
       ? selectedLists.push(id)
-      : selectedLists.splice(index)
+      : selectedLists.splice(index, 1)
 
     this.setState({ selectedLists })
   }

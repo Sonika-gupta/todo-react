@@ -1,12 +1,7 @@
 * {
   font: inherit;
   align-self: center;
-  box-sizing: border-box;
-}
-header {
-  position: fixed;
-  width: 100%;
-  top: 0;
+  /* box-sizing: border-box; */
 }
 main {
   margin: 50px auto 60px auto;
@@ -33,6 +28,9 @@ button:focus {
   background-color: rgb(199,22,43);
   color: white;
   float: right;
+}
+.hidden {
+  display: none;
 }
 #contextMenu {
   padding: 5px;

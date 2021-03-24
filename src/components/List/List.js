@@ -1,42 +1,41 @@
-import React from 'react'
+import { useState, useEffect } from 'react'
+import { useParams } from 'react-router-dom'
 import './list.css'
 import Item from '../Item/Item'
-import { getTasks, getListById } from '../../fetchData'
+import AddTask from '../AddTask'
+import { getTasks, getListById, newTask } from '../../fetchData'
 
-class List extends React.Component {
-  constructor (props) {
-    super(props)
-    this.state = {
-      list: {},
-      tasks: []
-    }
+function List () {
+  const [tasks, setTasks] = useState([])
+  const [list, setList] = useState({})
+  const { id } = useParams()
+  useEffect(() => {
+    (async function () {
+      setList(await getListById(id))
+      setTasks(await getTasks(id))
+    })()
+  }, [id])
+  console.log(id)
+
+  async function addTask (title) {
+    const task = await newTask(title, list.id)
+    console.log(task)
+    setTasks([...tasks, task])
   }
 
-  render () {
-    return (
+  return (
+    <div className='list-container'>
       <ul>
-        <style>{`body { background-color: ${this.state.list.color} }`}</style>
-        {this.state.tasks.map(task => (
+        <style>{`body { background-color: ${list.color} }`}</style>
+        {tasks.map(task => (
           <li key={task.id}>
             <Item task={task} />
           </li>
         ))}
       </ul>
-    )
-  }
-
-  async componentDidMount () {
-    const id = this.props.match.params.id
-    this.setState({ list: await getListById(id) })
-    this.setState({ tasks: await getTasks(id) })
-    // document.body.style.backgroundColor = this.state.list.color
-  }
-
-  minimap () {
-    return this.state.tasks.length
-      ? <span>{this.state.tasks.map(obj => obj.title).join('\n')}</span>
-      : <span className='empty-list'>No Tasks</span>
-  }
+      <AddTask onAdd={addTask} />
+    </div>
+  )
 }
 
 export default List

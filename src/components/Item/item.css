@@ -69,7 +69,7 @@ select {
     grid-area: priority;
 }
 .panel {
-    display: none;
+    display: grid;
     border-top: solid 1px rgb(224, 224, 224);
     height: 180px;
     padding: 10px 0 5px 5px;
@@ -79,10 +79,6 @@ select {
         "notes priority"
         "notes delete";
     grid-gap: 10px;
-    /* transition: all 1s ease-in-out; */
-}
-.active {
-    display: grid;
 }
 .panel > .deleteButton {
     grid-area: delete;
