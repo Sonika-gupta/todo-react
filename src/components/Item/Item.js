@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import './item.css'
 
-const Item = ({ task }) => {
+const Item = ({ task, onDelete }) => {
   const [expand, setExpand] = useState(false)
   const handleCheckTask = () => {
     console.log('checktask')
@@ -9,11 +9,14 @@ const Item = ({ task }) => {
   const setDeadline = (value) => {
     task.date = value
   }
+  function handleFormChange (event) {
+    console.log(event.target.name, event.target.value)
+  }
   return (
     <form
       id={`task${task.id}`}
       className='spaced bordered task-container'
-      // onChange={(e) => renderTask(e.target, task)}
+      onChange={(e) => handleFormChange(e.target)}
       onSubmit={(e) => e.preventDefault()}
     >
       <div className='title-bar spaced' onClick={() => setExpand(!expand)}>
@@ -54,7 +57,7 @@ const Item = ({ task }) => {
               <option defaultValue='high'> High </option>
             </select>
           </fieldset>
-          <button type='button' className='deleteButton bordered'>Delete</button>
+          <button type='button' className='deleteButton bordered' onClick={() => onDelete(task)}>Delete</button>
         </div>}
 
     </form>

@@ -1,112 +1,107 @@
-import React from 'react'
+import { useState, useEffect } from 'react'
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom'
 import './App.css'
 import ListIcon from './components/ListIcon/ListIcon'
 import List from './components/List/List'
 import Header from './components/Header/Header'
+import EditMenu from './components/EditMenu'
 import { getLists, deleteLists, updateList } from './fetchData'
 
-class App extends React.Component {
-  constructor (props) {
-    super(props)
-    this.state = {
-      lists: [],
-      selectedLists: []
-    }
-    this.appendNewListIcon = this.appendNewListIcon.bind(this)
-    this.handleDeleteList = this.handleDeleteList.bind(this)
-    this.handleRenameList = this.handleRenameList.bind(this)
-    this.handleRightCLick = this.handleRightCLick.bind(this)
-  }
+const App = (props) => {
+  const [lists, setLists] = useState([])
+  const [selectedLists, setSelectedLists] = useState([])
+  const [editMode, setEditMode] = useState(false)
 
-  render () {
-    return (
-      <div className='app'>
-        <Router>
-          <Switch>
-            <Route path='/lists/:id' component={List} exact />
-            <Route path='/' exact>
-              <Header newListHandler={this.appendNewListIcon} />
-              <main>
-                {this.state.lists.map(list => (
-                  <Link
-                    onContextMenu={(e) => {
-                      e.preventDefault()
-                      this.handleRightCLick(list.id)
-                    }}
-                    key={list.id}
-                    to={`/lists/${list.id}`}
-                    style={{ all: 'unset', color: 'inherit' }}
-                  >
-                    <ListIcon
-                      list={list}
-                      selected={this.state.selectedLists.indexOf(list.id) === -1}
-                    />
-                  </Link>
-                ))}
-              </main>
-              <footer>
-                <div id='contextMenu'>
-                  <button
-                    style={{ backgroundColor: 'white' }}
-                    disabled={this.state.selectedLists.length !== 1}
-                    onClick={this.handleRenameList}
-                  >Rename {this.state.selectedLists.length}
-                  </button>
-                  <button
-                    className='deleteButton'
-                    disabled={!this.state.selectedLists.length || this.state.selectedLists.indexOf(0) === -1}
-                    onClick={this.handleDeleteList}
-                  >Delete
-                  </button>
-                </div>
-              </footer>
-            </Route>
-          </Switch>
-        </Router>
-      </div>
-    )
-  }
+  useEffect(() => {
+    (async function () {
+      setLists(await getLists())
+    })()
+  }, [])
 
-  appendNewListIcon (newList) {
+  useEffect(() => {
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        setEditMode(false)
+      }
+    })
+  }, [])
+
+  function appendNewListIcon (newList) {
     console.log(newList)
-    this.setState({ lists: [...this.state.lists, newList] })
+    setLists([...lists, newList])
   }
 
-  removeListIcon (ids) {
-    console.log(ids)
-    const lists = this.state.lists.filter(list => !ids.includes(list.id))
-    this.setState({ lists })
-  }
+  return (
+    <div className='app'>
+      <Router>
+        <Switch>
+          <Route path='/lists/:id' component={List} exact />
+          <Route path='/' exact>
+            {editMode
+              ? <Header newListHandler={appendNewListIcon} />
+              : <EditMenu />}
+            <main>
+              {lists.map(list => (
+                <Link
+                  onContextMenu={(e) => {
+                    e.preventDefault()
+                    handleRightCLick(list.id)
+                  }}
+                  key={list.id}
+                  to={`/lists/${list.id}`}
+                  style={{ all: 'unset', color: 'inherit' }}
+                >
+                  <ListIcon
+                    list={list}
+                    selected={selectedLists.indexOf(list.id) === -1}
+                  />
+                </Link>
+              ))}
+            </main>
+            <footer>
+              <div id='contextMenu'>
+                <button
+                  style={{ backgroundColor: 'white' }}
+                  disabled={selectedLists.length !== 1}
+                  onClick={handleRenameList}
+                >Rename
+                </button>
+                <button
+                  className='deleteButton'
+                  disabled={!selectedLists.length || selectedLists.indexOf(0) === -1}
+                  onClick={handleDeleteList}
+                >Delete
+                </button>
+              </div>
+            </footer>
+          </Route>
+        </Switch>
+      </Router>
+    </div>
+  )
 
-  async handleRightCLick (id) {
-    const selectedLists = this.state.selectedLists
+  async function handleRightCLick (id) {
+    setEditMode(true)
     const index = selectedLists.indexOf(id)
     index === -1
       ? selectedLists.push(id)
       : selectedLists.splice(index, 1)
 
-    this.setState({ selectedLists })
+    setSelectedLists(selectedLists)
   }
 
-  async handleDeleteList () {
-    const deletedLists = await deleteLists(this.state.selectedLists)
-    this.removeListIcon(deletedLists.map(list => list.id))
+  async function handleDeleteList () {
+    const deletedLists = await deleteLists(selectedLists)
+    const ids = deletedLists.map(list => list.id)
+    setLists(lists.filter(list => !ids.includes(list.id)))
   }
 
-  async handleRenameList () {
+  async function handleRenameList () {
     const newName = window.prompt('New List Name: ')
     if (newName) {
-      const lists = this.state.lists
-      const renamedList = await updateList(this.state.selectedLists[0], 'name', newName)
-      this.setState({ lists: lists.map(list => list.id === renamedList.id ? renamedList : list) })
+      const renamedList = await updateList(selectedLists[0], 'name', newName)
+      setLists(lists.map(list => list.id === renamedList.id ? renamedList : list))
     }
-  }
-
-  async componentDidMount () {
-    this.setState({
-      lists: await getLists()
-    })
   }
 }
 

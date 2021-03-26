@@ -50,6 +50,14 @@ async function newTask (title, listId) {
   return await fetchData('tasks', { title, listId }, 'POST')
 }
 
+async function updateTask (id, key, value) {
+  return await fetchData('tasks', { id, key, value }, 'PUT')
+}
+
+async function deleteTask (id) {
+  return await fetchData('tasks', { id }, 'DELETE')
+}
+
 export {
   newList,
   getLists,
@@ -58,5 +66,7 @@ export {
   deleteLists,
   getTasks,
   getTasksTitles,
-  newTask
+  newTask,
+  updateTask,
+  deleteTask
 }

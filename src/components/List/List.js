@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom'
 import './list.css'
 import Item from '../Item/Item'
 import AddTask from '../AddTask'
-import { getTasks, getListById, newTask } from '../../fetchData'
+import { getTasks, getListById, newTask, deleteTask } from '../../fetchData'
 
 function List () {
   const [tasks, setTasks] = useState([])
@@ -23,13 +23,20 @@ function List () {
     setTasks([...tasks, task])
   }
 
+  async function removeTask ({ id, title }) {
+    if (window.confirm(`Delete Task ${title}?`)) {
+      const response = await deleteTask(id)
+      setTasks(tasks.filter(task => task.id !== response.id))
+    }
+  }
+
   return (
     <div className='list-container'>
       <ul>
         <style>{`body { background-color: ${list.color} }`}</style>
         {tasks.map(task => (
           <li key={task.id}>
-            <Item task={task} />
+            <Item className={task.isComplete && 'hidden'} task={task} onDelete={removeTask} />
           </li>
         ))}
       </ul>

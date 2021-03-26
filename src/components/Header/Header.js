@@ -18,7 +18,9 @@ function Header (props) {
           <button style={{ borderRadius: '0 4px 4px 0' }}>Today<span id='todayCount' /></button>
         </Link>
       </nav>
-      <button id='selectButton' className='right small' />
+      <button id='selectButton' className='right small'>
+        <img src='/tick.svg' alt='tick' />
+      </button>
       <button id='clearCompletedButton' className='right small' />
     </header>
   )
