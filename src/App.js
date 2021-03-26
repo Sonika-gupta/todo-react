@@ -3,9 +3,10 @@ import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom'
 import './App.css'
 import ListIcon from './components/ListIcon/ListIcon'
 import List from './components/List/List'
-import Header from './components/Header/Header'
+import Header from './components/Header'
+import ListHeader from './components/ListHeader'
 import EditMenu from './components/EditMenu'
-import { getLists, deleteLists, updateList } from './fetchData'
+import { getLists, deleteLists, updateList, clearCompletedTasks } from './fetchData'
 
 const App = (props) => {
   const [lists, setLists] = useState([])
@@ -35,11 +36,16 @@ const App = (props) => {
     <div className='app'>
       <Router>
         <Switch>
-          <Route path='/lists/:id' component={List} exact />
+          <Route path='/lists/:id' exact>
+            <ListHeader onClearCompleted={clearCompleted} />
+            <main style={{ marginTop: '20px' }}>
+              <List />
+            </main>
+          </Route>
           <Route path='/' exact>
             {editMode
-              ? <Header newListHandler={appendNewListIcon} />
-              : <EditMenu />}
+              ? <EditMenu />
+              : <Header newListHandler={appendNewListIcon} />}
             <main>
               {lists.map(list => (
                 <Link
@@ -102,6 +108,10 @@ const App = (props) => {
       const renamedList = await updateList(selectedLists[0], 'name', newName)
       setLists(lists.map(list => list.id === renamedList.id ? renamedList : list))
     }
+  }
+
+  async function clearCompleted (id) {
+    await clearCompletedTasks(id)
   }
 }
 

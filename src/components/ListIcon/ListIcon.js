@@ -9,7 +9,7 @@ const ListIcon = ({ list }) => {
     (async function () {
       setTaskTitles(await getTasksTitles(list.id))
     })()
-  }, [])
+  }, [list])
 
   return (
     <div className='list' onContextMenu={() => setSelected(!selected)}>

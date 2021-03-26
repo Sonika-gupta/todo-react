@@ -10,7 +10,7 @@ async function fetchData (route, data, method = 'GET') {
       }
     })
     const value = await res.json()
-    if (value.error) console.log(value.error)
+    if (value.error) throw Error(value.error)
     return value
   } catch (err) {
     console.log(err)
@@ -58,6 +58,10 @@ async function deleteTask (id) {
   return await fetchData('tasks', { id }, 'DELETE')
 }
 
+async function clearCompletedTasks (id) {
+  return await fetchData(`/lists/${id}`, {}, 'DELETE')
+}
+
 export {
   newList,
   getLists,
@@ -68,5 +72,6 @@ export {
   getTasksTitles,
   newTask,
   updateTask,
-  deleteTask
+  deleteTask,
+  clearCompletedTasks
 }

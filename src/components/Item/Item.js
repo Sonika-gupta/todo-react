@@ -1,31 +1,39 @@
 import { useState } from 'react'
 import './item.css'
 
-const Item = ({ task, onDelete }) => {
+const priorityBorder = {
+  none: 'solid 1px #e0e0e0',
+  low: 'solid 5px #3465a4',
+  medium: 'solid 5px #f57900',
+  high: 'solid 5px #cc0000'
+}
+
+const Item = ({ task, onDelete, onSubmit }) => {
   const [expand, setExpand] = useState(false)
-  const handleCheckTask = () => {
-    console.log('checktask')
-  }
   const setDeadline = (value) => {
     task.date = value
   }
-  function handleFormChange (event) {
-    console.log(event.target.name, event.target.value)
+  function handleFormChange (target) {
+    console.log(target.name, target.value)
+    onSubmit({
+      id: task.id,
+      key: target.name,
+      value: target.name === 'isComplete' ? target.checked : target.value
+    })
   }
   return (
     <form
       id={`task${task.id}`}
+      style={{ borderLeft: priorityBorder[task.priority] }}
       className='spaced bordered task-container'
       onChange={(e) => handleFormChange(e.target)}
       onSubmit={(e) => e.preventDefault()}
     >
       <div className='title-bar spaced' onClick={() => setExpand(!expand)}>
         <div className='icon'>
-          <svg width='12px' height='12px' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' stroke='currentColor'>
-            <path strokeWidth='1' d='M4 6h16M4 12h16M4 18h16' />
-          </svg>
+          <img src='/menu.svg' alt='menu-icon' />
         </div>
-        <input className='icon' type='checkbox' name='isComplete' onChange={handleCheckTask} onClick={(e) => e.stopPropagation()} />
+        <input className='icon' type='checkbox' name='isComplete' defaultChecked={task.iscomplete} onClick={(e) => e.stopPropagation()} />
         <input className='text' name='title' defaultValue={task.title} />
         <span className='detail light' name='date' />
         <div className='icon expand' name='expand'>
@@ -51,10 +59,10 @@ const Item = ({ task, onDelete }) => {
           <fieldset className='priority'>
             <legend>Priority</legend>
             <select className='bordered spaced' name='priority'>
-              <option defaultValue='none'> None </option>
-              <option defaultValue='low'> Low </option>
-              <option defaultValue='medium'> Medium </option>
-              <option defaultValue='high'> High </option>
+              <option value='none'> None </option>
+              <option value='low'> Low </option>
+              <option value='medium'> Medium </option>
+              <option value='high'> High </option>
             </select>
           </fieldset>
           <button type='button' className='deleteButton bordered' onClick={() => onDelete(task)}>Delete</button>

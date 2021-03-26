@@ -1,7 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import './header.css'
-import { newList } from '../../fetchData'
+import { newList } from '../fetchData'
 
 function Header (props) {
   return (
@@ -18,10 +17,12 @@ function Header (props) {
           <button style={{ borderRadius: '0 4px 4px 0' }}>Today<span id='todayCount' /></button>
         </Link>
       </nav>
-      <button id='selectButton' className='right small'>
-        <img src='/tick.svg' alt='tick' />
+      <button id='selectButton' className='right icon'>
+        <img src='/tick.svg' alt='tick' style={{ filter: 'invert(1)' }} />
       </button>
-      <button id='clearCompletedButton' className='right small' />
+      <button id='clearCompletedButton' className='right icon'>
+        <img src='/menu.svg' alt='menu-icon' style={{ filter: 'invert(1)' }} />
+      </button>
     </header>
   )
 }
