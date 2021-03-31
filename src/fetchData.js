@@ -13,7 +13,6 @@ async function fetchData (route, data, method = 'GET') {
     if (value.error) throw Error(value.error)
     return value
   } catch (err) {
-    console.log(err)
     throw Error({ message: 'Fetch Failed', err })
   }
 }
@@ -59,7 +58,7 @@ async function deleteTask (id) {
 }
 
 async function clearCompletedTasks (id) {
-  return await fetchData(`/lists/${id}`, {}, 'DELETE')
+  return await fetchData('lists/clear', { id }, 'DELETE')
 }
 
 export {

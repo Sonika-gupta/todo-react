@@ -1,7 +1,6 @@
 * {
   font: inherit;
   align-self: center;
-  /* box-sizing: border-box; */
 }
 main {
   margin: 50px auto 60px auto;
@@ -9,10 +8,11 @@ main {
   flex-direction: row;
   flex-flow: wrap;
 }
-Link {
-  all: inherit;
+a {
+  all: unset;
+  color: inherit;
+  cursor: pointer;
 }
-
 header {
   background-color: #323030;
   display: flex;
@@ -44,18 +44,16 @@ nav {
 }
 footer button {
   border-radius: 4px;
-  min-width: 60px;
-  height: 30px;
   padding: 5px 20px;
   margin: 2px;
+}
+button {
+  cursor: pointer;
 }
 button:focus {
   outline: none;
 }
 input[type = "color"] {
-  height: 90%;
-  padding: 0;
-  margin: auto 0;
   border: none;
   background-color: #585454
 }
@@ -70,11 +68,10 @@ input[type = "color"] {
   float: right;
 }
 .hidden {
-  display: none;
+  display: none !important;
 }
 .icon {
   padding: 3px 10px;
-  /* margin: auto 5px; */
 }
 #contextMenu {
   padding: 5px;

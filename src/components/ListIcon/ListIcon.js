@@ -2,9 +2,8 @@ import './listIcon.css'
 import { getTasksTitles } from '../../fetchData'
 import { useState, useEffect } from 'react'
 
-const ListIcon = ({ list }) => {
+const ListIcon = ({ list, onRightClick, onClick, selected }) => {
   const [taskTitles, setTaskTitles] = useState([])
-  const [selected, setSelected] = useState(false)
   useEffect(() => {
     (async function () {
       setTaskTitles(await getTasksTitles(list.id))
@@ -12,19 +11,13 @@ const ListIcon = ({ list }) => {
   }, [list])
 
   return (
-    <div className='list' onContextMenu={() => setSelected(!selected)}>
-      <div key={list.id} className='list-icon-container'>
-        <div
-          className='list-icon bordered' style={{ backgroundColor: list.color }} onClick={() => {
-            setSelected(!selected)
-          }}
-        >
-          {minimap()}
-        </div>
+    <div className='list-icon-container' onContextMenu={onRightClick} onClick={onClick}>
+      <div className='list-icon bordered' style={{ backgroundColor: list.color }}>
+        {minimap()}
         <img className={selected ? 'tick' : 'tick hidden'} src='/tick.svg' alt='tick' />
-        <div className='caption'>{list.name}</div>
-        <div className='caption light'>{list.location}</div>
       </div>
+      <div className='caption'>{list.name}</div>
+      <div className='caption light'>{list.location}</div>
     </div>
   )
 

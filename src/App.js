@@ -2,13 +2,12 @@ import { useState, useEffect } from 'react'
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom'
 import './App.css'
 import ListIcon from './components/ListIcon/ListIcon'
-import List from './components/List/List'
+import List from './components/List'
 import Header from './components/Header'
-import ListHeader from './components/ListHeader'
 import EditMenu from './components/EditMenu'
 import { getLists, deleteLists, updateList, clearCompletedTasks } from './fetchData'
 
-const App = (props) => {
+const App = () => {
   const [lists, setLists] = useState([])
   const [selectedLists, setSelectedLists] = useState([])
   const [editMode, setEditMode] = useState(false)
@@ -21,64 +20,55 @@ const App = (props) => {
 
   useEffect(() => {
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        setEditMode(false)
-      }
+      if (e.key === 'Escape') escapeEditMode()
     })
   }, [])
-
-  function appendNewListIcon (newList) {
-    console.log(newList)
-    setLists([...lists, newList])
-  }
 
   return (
     <div className='app'>
       <Router>
         <Switch>
-          <Route path='/lists/:id' exact>
-            <ListHeader onClearCompleted={clearCompleted} />
-            <main style={{ marginTop: '20px' }}>
-              <List />
-            </main>
+          <Route path='/lists/:id'>
+            <List onUpdate={(updatedList) => setLists(lists.map(list => list.id === updatedList.id ? updatedList : list))} />
           </Route>
-          <Route path='/' exact>
+          <Route path='/'>
             {editMode
-              ? <EditMenu />
-              : <Header newListHandler={appendNewListIcon} />}
+              ? <EditMenu onEscape={escapeEditMode} onCancel={escapeEditMode} />
+              : <Header
+                  newListHandler={(newList) => setLists([...lists, newList])}
+                  onClearCompleted={clearCompleted}
+                  onSelect={() => setEditMode(true)}
+                />}
             <main>
-              {lists.map(list => (
-                <Link
-                  onContextMenu={(e) => {
-                    e.preventDefault()
-                    handleRightCLick(list.id)
-                  }}
-                  key={list.id}
-                  to={`/lists/${list.id}`}
-                  style={{ all: 'unset', color: 'inherit' }}
-                >
-                  <ListIcon
-                    list={list}
-                    selected={selectedLists.indexOf(list.id) === -1}
-                  />
-                </Link>
-              ))}
+              <Route path='/' exact>
+                {lists.map(list => (
+                  <Link key={list.id} to={`/lists/${list.id}`}>
+                    <ListIcon
+                      list={list}
+                      selected={selectedLists.indexOf(list.id) !== -1}
+                      onRightClick={(e) => handleClick(e, list.id)}
+                      onClick={(e) => editMode && handleClick(e, list.id)}
+                    />
+                  </Link>
+                ))}
+              </Route>
             </main>
             <footer>
-              <div id='contextMenu'>
-                <button
-                  style={{ backgroundColor: 'white' }}
-                  disabled={selectedLists.length !== 1}
-                  onClick={handleRenameList}
-                >Rename
-                </button>
-                <button
-                  className='deleteButton'
-                  disabled={!selectedLists.length || selectedLists.indexOf(0) === -1}
-                  onClick={handleDeleteList}
-                >Delete
-                </button>
-              </div>
+              {editMode &&
+                <div id='contextMenu'>
+                  <button
+                    style={{ backgroundColor: 'white' }}
+                    disabled={selectedLists.length !== 1}
+                    onClick={handleRenameList}
+                  >Rename
+                  </button>
+                  <button
+                    className='deleteButton'
+                    disabled={!selectedLists.length || selectedLists.indexOf(0) !== -1}
+                    onClick={handleDeleteList}
+                  >Delete
+                  </button>
+                </div>}
             </footer>
           </Route>
         </Switch>
@@ -86,20 +76,39 @@ const App = (props) => {
     </div>
   )
 
-  async function handleRightCLick (id) {
-    setEditMode(true)
+  function escapeEditMode () {
+    setEditMode(false)
+    setSelectedLists([])
+  }
+
+  function toggleSelection (id) {
+    if (!editMode) setEditMode(true)
     const index = selectedLists.indexOf(id)
     index === -1
-      ? selectedLists.push(id)
-      : selectedLists.splice(index, 1)
+      ? setSelectedLists([...selectedLists, id])
+      : setSelectedLists(selectedLists.filter(el => el !== id))
+  }
 
-    setSelectedLists(selectedLists)
+  function handleClick (e, id) {
+    console.log(id)
+    e.preventDefault()
+    toggleSelection(id)
+    console.log(selectedLists)
+  }
+
+  async function clearCompleted (id) {
+    console.log('clearing', id)
+    if (window.confirm('Clear Completed Tasks?')) {
+      await clearCompletedTasks(id)
+    }
   }
 
   async function handleDeleteList () {
-    const deletedLists = await deleteLists(selectedLists)
-    const ids = deletedLists.map(list => list.id)
-    setLists(lists.filter(list => !ids.includes(list.id)))
+    if (window.confirm('Confirm delete Selected Lists ?')) {
+      const deletedLists = await deleteLists(selectedLists)
+      const ids = deletedLists.map(list => list.id)
+      setLists(lists.filter(list => !ids.includes(list.id)))
+    }
   }
 
   async function handleRenameList () {
@@ -108,10 +117,6 @@ const App = (props) => {
       const renamedList = await updateList(selectedLists[0], 'name', newName)
       setLists(lists.map(list => list.id === renamedList.id ? renamedList : list))
     }
-  }
-
-  async function clearCompleted (id) {
-    await clearCompletedTasks(id)
   }
 }
 

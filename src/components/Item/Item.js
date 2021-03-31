@@ -26,6 +26,7 @@ const Item = ({ task, onDelete, onSubmit }) => {
       id={`task${task.id}`}
       style={{ borderLeft: priorityBorder[task.priority] }}
       className='spaced bordered task-container'
+      // TODO: Replace event onChange with something else for text input
       onChange={(e) => handleFormChange(e.target)}
       onSubmit={(e) => e.preventDefault()}
     >
@@ -34,7 +35,7 @@ const Item = ({ task, onDelete, onSubmit }) => {
           <img src='/menu.svg' alt='menu-icon' />
         </div>
         <input className='icon' type='checkbox' name='isComplete' defaultChecked={task.iscomplete} onClick={(e) => e.stopPropagation()} />
-        <input className='text' name='title' defaultValue={task.title} />
+        <input className='text' name='title' defaultValue={task.title} style={{ textDecoration: task.iscomplete && 'line-through' }} />
         <span className='detail light' name='date' />
         <div className='icon expand' name='expand'>
           <svg height='12px' width='12px' viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'>
@@ -67,7 +68,6 @@ const Item = ({ task, onDelete, onSubmit }) => {
           </fieldset>
           <button type='button' className='deleteButton bordered' onClick={() => onDelete(task)}>Delete</button>
         </div>}
-
     </form>
   )
 }
