@@ -14,6 +14,13 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 The page will reload if you make edits.\
 You will also see any lint errors in the console.
 
+### `npm run dev`
+Runs the react-app in the development mode along with server `todo-pg` on port 3002.
+Set up [todo-pg](https://github.com/Sonika-gupta/todo-pg) before running this command. Open http://localhost:3000 to view it in the browser.
+
+The page will reload if you make edits in todo-react and server will reload if you make edits in todo-pg.
+You will also see any lint errors in the console.
+
 ### `npm test`
 
 Launches the test runner in the interactive watch mode.\
