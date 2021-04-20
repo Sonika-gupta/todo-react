@@ -13,7 +13,9 @@
     "web-vitals": "^1.1.0"
   },
   "scripts": {
+    "server": "cd ../todo-pg && npm start",
     "start": "react-scripts start",
+    "dev": "npm start & npm run server",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
