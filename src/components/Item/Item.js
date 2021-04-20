@@ -54,12 +54,12 @@ const Item = ({ task, onDelete, onSubmit }) => {
             <div className='date-menu bordered'>
               <input type='button' style={{ borderRadius: '4px 0 0 4px' }} defaultValue='today' onClick={(e) => setDeadline(e.target)} />
               <input type='button' defaultValue='tomorrow' onClick={(e) => setDeadline(e.target)} />
-              <input type='date' style={{ borderRadius: '0 4px 4px 0' }} name='deadline' />
+              <input type='date' defaultValue={task.deadline} style={{ borderRadius: '0 4px 4px 0' }} name='deadline' />
             </div>
           </fieldset>
           <fieldset className='priority'>
             <legend>Priority</legend>
-            <select className='bordered spaced' name='priority'>
+            <select className='bordered spaced' name='priority' defaultValue={task.priority}>
               <option value='none'> None </option>
               <option value='low'> Low </option>
               <option value='medium'> Medium </option>
