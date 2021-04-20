@@ -5,6 +5,7 @@ import ListIcon from './components/ListIcon/ListIcon'
 import List from './components/List'
 import Header from './components/Header'
 import EditMenu from './components/EditMenu'
+import ContextFooter from './components/ContextFooter'
 import { getLists, deleteLists, updateList, clearCompletedTasks } from './fetchData'
 
 const App = () => {
@@ -52,24 +53,11 @@ const App = () => {
                   </Link>
                 ))}
               </Route>
+              <Route path='/scheduled'>
+                {console.log(lists.filter(list => list.deadline))}
+              </Route>
             </main>
-            <footer>
-              {editMode &&
-                <div id='contextMenu'>
-                  <button
-                    style={{ backgroundColor: 'white' }}
-                    disabled={selectedLists.length !== 1}
-                    onClick={handleRenameList}
-                  >Rename
-                  </button>
-                  <button
-                    className='deleteButton'
-                    disabled={!selectedLists.length || selectedLists.indexOf(0) !== -1}
-                    onClick={handleDeleteList}
-                  >Delete
-                  </button>
-                </div>}
-            </footer>
+            {editMode && <ContextFooter selectedLists={selectedLists} onDelete={handleDeleteList} onRename={handleRenameList} />}
           </Route>
         </Switch>
       </Router>

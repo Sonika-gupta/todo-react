@@ -42,10 +42,10 @@ function Header (props) {
           </button>
         </Link>
       </nav>
-      <button id='selectButton' className='right icon' onClick={props.onSelect}>
+      <button id='selectButton' className='right icon' onClick={props.onSelect} title='Toggle Edit Mode'>
         <img src='/tick.svg' alt='tick' style={{ filter: 'invert(1)' }} />
       </button>
-      <button id='clearCompletedButton' className='right icon' onClick={() => props.onClearCompleted()}>
+      <button id='clearCompletedButton' className='right icon' onClick={() => props.onClearCompleted()} title='Cancel Edit Mode'>
         <img src='/menu.svg' alt='menu-icon' style={{ filter: 'invert(1)' }} />
       </button>
     </header>

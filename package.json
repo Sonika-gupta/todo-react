@@ -14,8 +14,8 @@
   },
   "scripts": {
     "server": "cd ../todo-pg && npm start",
-    "start": "react-scripts start",
-    "dev": "npm start & npm run server",
+    "dev": "react-scripts start",
+    "start": "npm run dev & npm run server",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
