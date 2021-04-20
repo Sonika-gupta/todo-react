@@ -9,6 +9,8 @@ nav button {
     background-color: #585454;
     border: solid 1px black;
     color: white;
+    padding: 5px 20px;
+    margin: 2px 1px;
 }
 nav > div {
     justify-content: center;

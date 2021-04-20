@@ -1,8 +1,8 @@
 ul {    
-    width: auto;
+    width: 50%;
     min-width: 600px;
     padding: 0;
-    margin: 10px auto;    
+    margin: 10px auto;
 }
 
 li {
